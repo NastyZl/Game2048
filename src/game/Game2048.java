@@ -21,7 +21,12 @@ public class Game2048 implements  Game<Key,Integer>{
     public void init() {
         board.clear();
         for (var i=0; i < 2; i++) {
-            addItem();
+            try {
+                addItem();
+            }
+            catch (NotEnoughSpace notEnoughSpace) {
+                System.out.println(notEnoughSpace.getMessage());
+            }
         }
     }
 
@@ -60,7 +65,12 @@ public class Game2048 implements  Game<Key,Integer>{
                 break;
         }
         if (result) {
-            addItem();
+            try {
+                addItem();
+            }
+            catch (NotEnoughSpace notEnoughSpace) {
+                System.out.println(notEnoughSpace.getMessage());
+            }
         }
         return result;
     }
@@ -95,7 +105,7 @@ public class Game2048 implements  Game<Key,Integer>{
         return true;
     }
 
-    public boolean shiftUp(Board<Key, Integer> board, int j){
+    public boolean shiftUp(Board<Key, Integer> board, int j) {
         var newCol = helper.moveAndMergeEqual(board.getValueColumn(j));
         for (int i = 0; i < newCol.size(); i++){
             board.addItem(board.getKey(i, j), newCol.get(i));
@@ -104,15 +114,16 @@ public class Game2048 implements  Game<Key,Integer>{
     }
 
     @Override
-    public void addItem() {
+    public void addItem()  throws NotEnoughSpace {
         var emptyTiles = board.availableSpace();
-        if (!emptyTiles.isEmpty()) {
-            int randomIndex = random.nextInt(emptyTiles.size());
-            if (random.nextFloat() > 0.9) {
-                board.addItem(emptyTiles.get(randomIndex), 4);
-            } else {
-                board.addItem(emptyTiles.get(randomIndex), 2);
-            }
+        if (emptyTiles.isEmpty()){
+            throw new NotEnoughSpace("There are no empty tiles on the board");
+        }
+        int randomIndex = random.nextInt(emptyTiles.size());
+        if (random.nextFloat() > 0.9) {
+            board.addItem(emptyTiles.get(randomIndex), 4);
+        } else {
+            board.addItem(emptyTiles.get(randomIndex), 2);
         }
     }
 

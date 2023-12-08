@@ -17,6 +17,9 @@ public class SquareBoard<V> extends Board<Key, V> {
     public void fillBoard(List<V> list) {
         this.board.clear();
         ListIterator<V> iterator = list.listIterator();
+        if (list.size() > availableSpace().size()) {
+            throw new RuntimeException("The entered number of elements exceeds the number of board tiles");
+        }
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
                 if(iterator.hasNext()) {
@@ -28,13 +31,13 @@ public class SquareBoard<V> extends Board<Key, V> {
 
     @Override
     public List<Key> availableSpace() {
-        List<Key> nullValueKey = new ArrayList<>();
+        List<Key> keysWithNullValues = new ArrayList<>();
         for (var entry: board.entrySet()) {
             if (entry.getValue() == null) {
-                nullValueKey.add(entry.getKey());
+                keysWithNullValues.add(entry.getKey());
             }
         }
-        return nullValueKey;
+        return keysWithNullValues;
     }
 
     @Override
