@@ -1,0 +1,1 @@
+Test classes are located in the package Game2048/src/test
